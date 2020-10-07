@@ -1,0 +1,47 @@
+---
+- hosts: web
+  vars:
+    ansible_become: yes
+    ansible_become_method: sudo
+
+  tasks:
+    - name: create group
+      group:
+        name: keycloak
+        state: present
+    - name: create user
+      user:
+        name: keycloak
+        group: keycloak
+        append: yes
+    - name: copy keycloak service
+      copy:
+        src: ../etc/systemd/system/keycloak.service
+        dest: /etc/systemd/system
+    - name: create directory
+      file:
+        path: /opt/keycloak
+        state: directory
+        owner: keycloak
+        group: keycloak
+        mode: 0755
+    - name: unarchive
+      unarchive:
+        src: https://downloads.jboss.org/keycloak/11.0.2/keycloak-11.0.2.tar.gz
+        dest: /opt/keycloak
+        remote_src: True
+        owner: keycloak
+        group: keycloak
+    - name: copy standalone xml
+      copy:
+        src: ../standalone/configuration/standalone.xml
+        dest: /opt/keycloak/keycloak-11.0.2/standalone/configuration
+        owner: keycloak
+        group: keycloak
+        force: yes
+    - name: keycloak start
+      systemd:
+        name: keycloak
+        enabled: yes
+        state: restarted
+        force: yes
