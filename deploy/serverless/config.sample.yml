@@ -1,0 +1,9 @@
+restApiId: {AWS REST API ID}
+restApiRootResourceId: {AWS REST API ROOT RESOURCE ID}
+clientId: {KEYCLOAK CLIENT ID}
+clientSecret: {KEYCLOAK CLIENT SECRET}
+redirectUri: {REDIRECT URI}
+tokenEndpoint: {KEYCLOAK BASE URL}/realms/{REALM NAME}/protocol/openid-connect/token
+
+# This Lambda function returns a redirect response.
+location: http://localhost:4200/
